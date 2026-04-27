@@ -38,7 +38,7 @@
 
 
 import { useLocation, useNavigate } from "react-router-dom";
-import { useUser } from "../../context/UserContext";
+import { useUser } from "../../context/useUser";
 import "./LandingPage.css";
 
 interface LocationState {

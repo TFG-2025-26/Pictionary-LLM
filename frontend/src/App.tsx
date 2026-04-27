@@ -129,7 +129,8 @@
 
 import { type ReactNode } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { UserProvider, useUser } from "./context/UserContext";
+import { UserProvider } from "./context/UserContext";
+import { useUser } from "./context/useUser";
 
 // Páginas
 import LandingPage from "./pages/Landing/LandingPage";

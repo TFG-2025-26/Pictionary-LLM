@@ -99,7 +99,6 @@
 
 import {
   createContext,
-  useContext,
   useEffect,
   useMemo,
   useState,
@@ -118,7 +117,7 @@ interface UserContextType {
   logout: () => void;
 }
 
-const UserContext = createContext<UserContextType | undefined>(undefined);
+export const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<User | null>(null);
@@ -128,7 +127,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const token = localStorage.getItem("token");
     if (!token) { setIsLoading(false); return; }
 
-    fetch(`${API_BASE_URL}/auth/me`, {
+    fetch(`${API_BASE_URL}/auth`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((r) => r.ok ? r.json() : Promise.reject())
@@ -153,13 +152,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   const login = async (username: string, pass: string) =>
-    saveSession(await apiFetch("/auth/login", { username, password: pass }));
+    saveSession(await apiFetch("/login", { username, password: pass }));
 
   const register = async (username: string, email: string, pass: string) =>
-    saveSession(await apiFetch("/auth/register", { username, email, password: pass }));
+    saveSession(await apiFetch("/register", { username, email, password: pass }));
 
   const loginAsGuest = async () =>
-    saveSession(await apiFetch("/auth/guest", {}));
+    saveSession(await apiFetch("/guest", {}));
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -173,9 +172,3 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }
-
-export const useUser = () => {
-  const context = useContext(UserContext);
-  if (!context) throw new Error("useUser debe usarse dentro de UserProvider");
-  return context;
-};
