@@ -1,0 +1,77 @@
+// import { useNavigate } from "react-router-dom";
+// import { useUser } from "../../context/UserContext";
+// import "./LandingPage.css";
+
+// export default function LandingPage() {
+//   const navigate = useNavigate();
+//   const { loginAsGuest } = useUser();
+
+//   const handleGuest = async () => {
+//     await loginAsGuest();
+//     navigate("/menu");
+//   };
+
+//   return (
+//     <section className="landing-page">
+//       <h1>Pictionary AI</h1>
+//       <div className="landing-actions">
+//         <button className="guest-btn" type="button" onClick={handleGuest}>
+//           Jugar como Invitado
+//         </button>
+//         <button className="login-btn" type="button" onClick={() => navigate("/login")}>
+//           Iniciar Sesion
+//         </button>
+//         <button className="register-btn" type="button" onClick={() => navigate("/register")}>
+//           Registrarse
+//         </button>
+//       </div>
+//     </section>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+import { useLocation, useNavigate } from "react-router-dom";
+import { useUser } from "../../context/UserContext";
+import "./LandingPage.css";
+
+interface LocationState {
+  message?: string;
+  error?: string;
+}
+
+export default function LandingPage() {
+  const navigate = useNavigate();
+  const { loginAsGuest } = useUser();
+  const { state } = useLocation() as { state: LocationState | null };
+
+  const handleGuest = async () => {
+    await loginAsGuest();
+    navigate("/menu");
+  };
+
+  return (
+    <section className="landing-page">
+      <h1>Pictionary AI</h1>
+      {state?.message && <p className="success-message">{state.message}</p>}
+      {state?.error && <p className="error-message">{state.error}</p>}
+      <div className="landing-actions">
+        <button className="guest-btn" type="button" onClick={handleGuest}>
+          Jugar como Invitado
+        </button>
+        <button className="login-btn" type="button" onClick={() => navigate("/login")}>
+          Iniciar Sesión
+        </button>
+        <button className="register-btn" type="button" onClick={() => navigate("/register")}>
+          Registrarse
+        </button>
+      </div>
+    </section>
+  );
+}
