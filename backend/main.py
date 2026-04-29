@@ -7,7 +7,9 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.api import auth, game_api
-from src.game_sockets import room_manager
+from src.core.db_sqlite import engine, Base
+from src.core import models
+#from src.game_sockets import room_manager
 
 
 # --- CONFIGURACIÓN DE LOGS ---
@@ -37,8 +39,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(auth.router, prefix="/api/auth", tags=["Autenticación"])
-app.include_router(game_api.router, prefix="/api/game", tags=["Lógica de Juego"])
+Base.metadata.create_all(bind=engine)
+
+app.include_router(auth.router, tags=["auth"]) #, prefix="/api/auth"
+app.include_router(game_api.router, tags=["game_logic"]) #, prefix="/api/game"
 
 # Montar Sockets...
 
@@ -46,6 +50,7 @@ app.include_router(game_api.router, prefix="/api/game", tags=["Lógica de Juego"
 
 @app.get("/")
 async def root():
+    """asd"""
     return {"message": "Servidor del TFG funcionando"}
 
 if __name__ == "__main__":

@@ -1,10 +1,9 @@
 # Pictionary TFG (nombre provisional)
 
-# lo que llevo creado de momento del proyecto
-# lo he dividido en dos partes, el frontend y el backend
-# de momento he hecho "npm create vite@latest ." eligiendo React, y Typescript (no Typescript + React compiler, no es necesario)
-# estoy creando las primeras paginas de React del frontend, y también estoy creando la estructura del backend, ya que
-# voy a separar ficheros en varios lugares, para no crear un fichero main.py enorme que sea dificil de leer y entender
-# así, si quiero buscar por ejemplo algo relacionado con las bases de datos, me voy a la carpeta /bd y ya está, no tengo
-# que andar scrolleando no sé cuanto hasta llegar a esa parte del código que contiene las 2 o 3 funciones pequeñas
-# que simplemente conectan con la bd, o que cogen datos de una y lo mueven a la otra, así que así queda separado y más fácil de leer
+# lo que llevo creado de momento del proyecto, lo he dividido en dos partes, el frontend y el backend. De momento he hecho "npm create vite@latest ." eligiendo React, y Typescript (no Typescript + React compiler, no es necesario). Estoy creando las primeras paginas de React del frontend, y también estoy creando la estructura del backend, ya que voy a separar ficheros en varios lugares, para no crear un fichero main.py enorme que sea dificil de leer y entender así, si quiero buscar por ejemplo algo relacionado con las bases de datos, me voy a la carpeta /bd y ya está, no tengo que andar scrolleando no sé cuanto hasta llegar a esa parte del código que contiene las 2 o 3 funciones pequeñas que simplemente conectan con la bd, o que cogen datos de una y lo mueven a la otra, así que así queda separado y más fácil de leer
+
+# el frontend y el backend de momento ya funcionan, vite cambia las paginas en :5173, y uvicorn en :8000 responde a las peticiones, he creado la de prueba de /register en GET y me responde el json de prueba, ahora mismo estoy con crear las conexiones a la base de datos, que cuando le de al boton de login con las credenciales, según entiendo vite o react mandan un json al backend, este lo coge, y yo voy a tener que programar el leer las variables, en el caso del login el username y la contra, y ya hago el proceso de mirar que existe, coger el hash guardado, calcular el que me han dado, comprobar que son iguales, si lo son le devuelvo el jwt con la sesion, si no le mando un error de que las credenciales no son correctas etc. etc. etc.
+
+# para arrancar todo esto es tan facil como arrancar dos terminales en la raiz, en una hacer "cd frontend" y luego "npm run dev", y en la otra "cd backend" y ".\venv\Scripts\python.exe .\main.py"
+
+# he hecho "pip install pydantic[email]"
