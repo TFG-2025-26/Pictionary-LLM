@@ -1,42 +1,3 @@
-// import { useNavigate } from "react-router-dom";
-// import { useUser } from "../../context/UserContext";
-// import "./LandingPage.css";
-
-// export default function LandingPage() {
-//   const navigate = useNavigate();
-//   const { loginAsGuest } = useUser();
-
-//   const handleGuest = async () => {
-//     await loginAsGuest();
-//     navigate("/menu");
-//   };
-
-//   return (
-//     <section className="landing-page">
-//       <h1>Pictionary AI</h1>
-//       <div className="landing-actions">
-//         <button className="guest-btn" type="button" onClick={handleGuest}>
-//           Jugar como Invitado
-//         </button>
-//         <button className="login-btn" type="button" onClick={() => navigate("/login")}>
-//           Iniciar Sesion
-//         </button>
-//         <button className="register-btn" type="button" onClick={() => navigate("/register")}>
-//           Registrarse
-//         </button>
-//       </div>
-//     </section>
-//   );
-// }
-
-
-
-
-
-
-
-
-
 import { useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "../../context/useUser";
 import "./LandingPage.css";
@@ -48,13 +9,16 @@ interface LocationState {
 
 export default function LandingPage() {
   const navigate = useNavigate();
-  const { loginAsGuest } = useUser();
+  const { loginAsGuest, logout } = useUser();
   const { state } = useLocation() as { state: LocationState | null };
 
   const handleGuest = async () => {
-    await loginAsGuest();
-    navigate("/menu");
-  };
+    try {
+      await loginAsGuest();
+    } catch (err) {
+      console.error("Fallo al entrar como invitado", err);
+    }
+  }
 
   return (
     <section className="landing-page">
@@ -62,7 +26,7 @@ export default function LandingPage() {
       {state?.message && <p className="success-message">{state.message}</p>}
       {state?.error && <p className="error-message">{state.error}</p>}
       <div className="landing-actions">
-        <button className="guest-btn" type="button" onClick={handleGuest}>
+        <button className="login-guest-btn" type="button" onClick={handleGuest}>
           Jugar como Invitado
         </button>
         <button className="login-btn" type="button" onClick={() => navigate("/login")}>
@@ -71,6 +35,12 @@ export default function LandingPage() {
         <button className="register-btn" type="button" onClick={() => navigate("/register")}>
           Registrarse
         </button>
+
+
+        {/*este es el boton de logout para poder desconectarme*/}
+        <button type="button" onClick={logout}>Logout</button>
+
+
       </div>
     </section>
   );

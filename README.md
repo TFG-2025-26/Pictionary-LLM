@@ -7,3 +7,5 @@
 # para arrancar todo esto es tan facil como arrancar dos terminales en la raiz, en una hacer "cd frontend" y luego "npm run dev", y en la otra "cd backend" y ".\venv\Scripts\python.exe .\main.py"
 
 # he hecho "pip install pydantic[email]"
+
+# las rutas iniciales de register, login y login_guest ya funcionan, también el tema del token de jwt, ahora, si entras al frontend en la raiz, 1. lee si tienes token, 1a.si no hay o esta expirado (te lo borra) te deja en la landing page y ahi tienes que elegir si login, login como guest o registro, 2. cualquiera de estas rutas hace lo suyo y te devuelven a la landing, la landing revisa tu token de nuevo, y si has hecho login o login como guest, ahora que es valido, 3. te redireccionará automáticamente al main menu, que es una ruta solo para usuarios logueados (ESTOY TERMINANDO LO DE LOGIN GUEST PORQUE DA FALLO, TENGO QUE AJUSTAR LO DE LA CONEXION CON REDIS)
