@@ -112,12 +112,13 @@ async def login(data: UserLogin, db: Session = Depends(get_sql_db)):
         }
     }
 
+
 @router.post("/login_guest")
 async def login_guest():
     """ Ruta que maneja la creación de una cuenta guest temporal """
 
     # 1. Generar identidad temporal
-    guest_id = str(uuid.uuid4())[:8]
+    guest_id = str(uuid.uuid4())[:4]
     guest_username = f"Guest_{guest_id}"
 
     # 2. Guardar en Redis (opcional: ponerle un tiempo de vida de 24h)
@@ -130,13 +131,19 @@ async def login_guest():
     )
 
     return {
+        "status": "success",
         "access_token": access_token,
         "token_type": "bearer",
-        "username": guest_username
+        "user": {
+            "id": guest_id,
+            "username": guest_username
+        }
     }
 
 
-
+@router.get("/auth")
+async def auth():
+    """ asd asd """
 
 
 @router.get("/show")

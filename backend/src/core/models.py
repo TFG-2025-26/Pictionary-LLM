@@ -5,6 +5,8 @@ from sqlalchemy import Column, Integer, String, DateTime, ForeignKey #, Boolean
 from sqlalchemy.orm import relationship #, declarative_base
 from .db_sqlite import Base # pylint: disable=relative-beyond-top-level
 
+# pylint: disable=too-few-public-methods
+
 class User(Base):
     """ Clase usuario, almacena los datos de los 
     usuarios que se registren en la aplicación """
@@ -18,7 +20,7 @@ class User(Base):
     avatar_url = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    stats = relationship("Stats", back_populates="user", uselist=False, cascade="all, delete-orphan")
+    stats = relationship("Stats", back_populates="user", uselist=False, cascade="all, delete-orphan") # pylint: disable=line-too-long
     # matches_won = relationship("MatchHistory", back_populates="winner")
 
 class Stats(Base):
@@ -44,7 +46,6 @@ class MatchHistory(Base):
     id = Column(Integer, primary_key=True, index=True)
     date = Column(DateTime, default=datetime.utcnow)
     room_code = Column(String, index=True)
-    
     winner_id = Column(Integer, ForeignKey("users.id"))
-    
+
     # winner = relationship("User", back_populates="matches_won")

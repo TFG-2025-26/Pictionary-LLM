@@ -9,12 +9,13 @@ interface LocationState {
 
 export default function LandingPage() {
   const navigate = useNavigate();
-  const { loginAsGuest, logout } = useUser();
+  const { loginAsGuest } = useUser();
   const { state } = useLocation() as { state: LocationState | null };
 
   const handleGuest = async () => {
     try {
       await loginAsGuest();
+      navigate('/menu');
     } catch (err) {
       console.error("Fallo al entrar como invitado", err);
     }
@@ -23,8 +24,8 @@ export default function LandingPage() {
   return (
     <section className="landing-page">
       <h1>Pictionary AI</h1>
-      {state?.message && <p className="success-message">{state.message}</p>}
-      {state?.error && <p className="error-message">{state.error}</p>}
+      {/* {state?.message && <p className="success-message">{state.message}</p>}
+      {state?.error && <p className="error-message">{state.error}</p>} */}
       <div className="landing-actions">
         <button className="login-guest-btn" type="button" onClick={handleGuest}>
           Jugar como Invitado
@@ -35,12 +36,6 @@ export default function LandingPage() {
         <button className="register-btn" type="button" onClick={() => navigate("/register")}>
           Registrarse
         </button>
-
-
-        {/*este es el boton de logout para poder desconectarme*/}
-        <button type="button" onClick={logout}>Logout</button>
-
-
       </div>
     </section>
   );

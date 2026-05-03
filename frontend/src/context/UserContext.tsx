@@ -1,7 +1,18 @@
 import { createContext, useEffect, useMemo, useState, type ReactNode,} from "react";
 import type { User, AuthResponse } from "./auth.ts";
 
-const API_BASE_URL = "http://localhost:8000";
+// const API_BASE_URL = "http://localhost:8000";
+
+const getApiUrl = () => {
+  // if (import.meta.env.PROD) {
+  //   return "";
+  // }
+
+  return `http://${window.location.hostname}:8000`;
+}
+
+const API_BASE_URL = getApiUrl();
+
 
 interface UserContextType {
   session: User | null;
@@ -15,27 +26,49 @@ interface UserContextType {
 export const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: ReactNode }) {
-  const [session, setSession] = useState<User | null>(null);
+  // const [session, setSession] = useState<User | null>(null);
+
+  const [session, setSession] = useState<User | null>(() => {
+    const savedUser = localStorage.getItem("user_data");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) { setIsLoading(false); return; }
+    const userData = localStorage.getItem("user_data");
+    if (!token || !userData) { setIsLoading(false); return; }
 
-    fetch(`${API_BASE_URL}/auth`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((r) => r.ok ? r.json() : Promise.reject())
-      .then((data) => setSession(data.user))
-      .catch(() => {
-        localStorage.removeItem("token");
-        setSession(null);
-      })
-      .finally(() => setIsLoading(false));
+    setSession(JSON.parse(userData));
+    setIsLoading(false);
+
+  //   fetch(`${API_BASE_URL}/auth`, {
+  //     headers: { Authorization: `Bearer ${token}` },
+  //   })
+  //     .then((r) => r.ok ? r.json() : Promise.reject())
+      
+  //     // .then((data) => setSession(data.user))
+
+  //     .then((data) => {
+  //     setSession(data.user);
+  //     localStorage.setItem("user_data", JSON.stringify(data.user));})
+
+  //     .catch((err) => {
+  //       console.log("ME HAN ECHADO POR ESTO:", err);
+  //       localStorage.removeItem("token");
+  //       localStorage.removeItem("user_data");
+  //       setSession(null);
+  //     })
+  //     .finally(() => setIsLoading(false));
+  // }, []);
   }, []);
 
   const saveSession = (data: AuthResponse) => {
     localStorage.setItem("token", data.token);
+
+    localStorage.setItem("user_data", JSON.stringify(data.user));
+
     setSession(data.user);
   };
 
@@ -86,6 +119,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const logout = () => {
     localStorage.removeItem("token");
+
+    localStorage.removeItem("user_data");
+    
     setSession(null);
   };
 

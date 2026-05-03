@@ -8,6 +8,9 @@ import LandingPage from "./pages/Landing/LandingPage";
 import LoginPage from "./pages/Login/LoginPage";
 import RegisterPage from "./pages/Register/RegisterPage";
 import MainMenuPage from "./pages/MainMenu/MainMenuPage";
+import PracticePage from "./pages/Practice/PracticePage";
+// import MultiplayerPage from "./pages/Multiplayer/MultiplayerPage";
+// import ListRoomsPage from "./pages/ListRooms/ListRoomsPage";
 // import GamePage from "./pages/Game/GamePage";
 // ... el resto de tus imports
 
@@ -40,7 +43,10 @@ export default function App() {
 
           {/* Rutas solo privadas para usuarios logueados */}
           <Route path="/menu" element={<ProtectedRoute><MainMenuPage /></ProtectedRoute>} />
-          {/* <Route path="/game/:roomId" element={<ProtectedRoute><GamePage /></ProtectedRoute>} /> */}
+          <Route path="/practice" element={<ProtectedRoute><PracticePage /></ProtectedRoute>} />
+          {/* <Route path="/multiplayer" element={<ProtectedRoute><MultiplayerPage /></ProtectedRoute>} />
+          <Route path="/list-rooms" element={<ProtectedRoute><ListRoomsPage /></ProtectedRoute>} /> */}
+          {/* <Route path="/room/:roomId" element={<ProtectedRoute><GamePage /></ProtectedRoute>} /> */}
           
           {/* 404 */}
           <Route path="*" element={<Navigate to="/" replace />} />

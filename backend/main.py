@@ -8,8 +8,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.api import auth, game_api
 from src.core.db_sqlite import engine, Base
-from src.core import models
-#from src.game_sockets import room_manager
+# from src.core import models
+# from src.game_sockets import room_manager
 
 
 # --- CONFIGURACIÓN DE LOGS ---
@@ -22,6 +22,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 @asynccontextmanager
+# pylint: disable=unused-argument, redefined-outer-name
 async def lifespan(app: FastAPI):
     """ Función que ejecuta código al encendido y apagado del backend """
 
@@ -33,7 +34,8 @@ app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    # allow_origins=["http://localhost:5173"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -54,4 +56,5 @@ async def root():
     return {"message": "Servidor del TFG funcionando"}
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="localhost", port=8000, reload=True)
+    # uvicorn.run("main:app", host="localhost", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

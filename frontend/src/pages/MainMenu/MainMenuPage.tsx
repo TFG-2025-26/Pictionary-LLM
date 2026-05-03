@@ -1,8 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../../context/useUser";
 import "./MainMenuPage.css";
 
 export default function MainMenuPage() {
+  const navigate = useNavigate();
   const { session, logout } = useUser();
 
   return (
@@ -10,8 +11,12 @@ export default function MainMenuPage() {
       <h1>Menu Principal</h1>
       <p>Bienvenido, {session?.username}</p>
       <div className="menu-grid">
-        <Link to="/practice">Practica</Link>
-        <Link to="/multiplayer">Multijugador</Link>
+        <button className="single-player-btn" type="button" onClick={() => navigate("/practice")}>
+          Practica
+        </button>
+        <button className="multiplayer-btn" type="button" onClick={() => navigate("/multiplayer")}>
+          Multijugador
+        </button>
       </div>
 
       {/*este es el boton de logout para poder desconectarme*/}

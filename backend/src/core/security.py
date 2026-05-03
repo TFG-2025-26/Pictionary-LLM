@@ -47,17 +47,15 @@ def decode_access_token(token: str):
     try:
         decoded_token = jwt.decode(token, JWT_SECRET, algorithms=[ALGORITHM])
         return decoded_token if decoded_token["exp"] >= datetime.utcnow().timestamp() else None
-    except: # pylint: disable=bare-except
+    except Exception: # pylint: disable=broad-exception-caught
         return None
 
 # Esto le dice a FastAPI que busque el token en el header "Authorization"
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login") 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
-    """
-    Esta función actúa como filtro. Si el token no es válido,
-    el usuario ni siquiera llega a ejecutar la lógica de la ruta.
-    """
+    """ Función que actúa como filtro. Si el token no es válido,
+    el usuario ni siquiera llega a ejecutar la lógica de la ruta. """
     payload = decode_access_token(token)
     if not payload:
         raise HTTPException(

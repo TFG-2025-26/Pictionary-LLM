@@ -1,0 +1,16 @@
+/* src/components/DrawingCanvas/DrawingCanvas.css */
+.drawing-canvas {
+  background-color: #ffffff;
+  border: 2px solid #333;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: crosshair; /* Cambia el cursor a una cruz para indicar que se puede dibujar */
+  display: block;
+  margin: 0 auto;
+  touch-action: none; /* Importante para que el scroll del móvil no moleste al dibujar */
+}
+
+.drawing-canvas.read-only {
+  cursor: default;
+  background-color: #f9f9f9;
+}
