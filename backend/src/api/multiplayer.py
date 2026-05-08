@@ -1,4 +1,4 @@
-"""asdasdasd"""
+""" multiplayer.py - Fichero que contiene las rutas para trabajar con el sistema de salas """
 
 from fastapi import APIRouter#, Depends
 

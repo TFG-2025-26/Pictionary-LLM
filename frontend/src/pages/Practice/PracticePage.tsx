@@ -1,42 +1,3 @@
-// import DrawingCanvas from "../../components/DrawingCanvas/DrawingCanvas";
-// import { useNavigate } from "react-router-dom";
-// import "./PracticePage.css";
-
-// export default function PracticePage() {
-//   const navigate = useNavigate();
-
-//   const handleClear = () => {
-//     // Lógica para limpiar el canvas (podemos añadir una prop al Canvas para esto)
-//     window.location.reload(); // Truco rápido por ahora
-//   };
-
-//   return (
-//     <div className="practice-container">
-//       <header className="practice-header">
-//         <button onClick={() => navigate("/menu")}>Volver</button>
-//         <h2>Modo Práctica</h2>
-//         <button onClick={handleClear}>Limpiar</button>
-//       </header>
-
-//       <main className="canvas-wrapper">
-//         <DrawingCanvas width={800} height={500} />
-//       </main>
-
-//       {/* <aside className="ia-panel">
-//         <h3>IA Feedback</h3>
-//         <p>Dibuja algo y pronto Sketch-RNN te ayudará...</p>
-//       </aside> */}
-//     </div>
-//   );
-// }
-
-
-
-
-
-
-
-
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import DrawingCanvas from "../../components/DrawingCanvas/DrawingCanvas";
@@ -44,7 +5,7 @@ import "./PracticePage.css";
 
 export default function PracticePage() {
   const navigate = useNavigate();
-  const canvasRef = useRef<{ clear: () => void }>(null); // Referencia al canvas
+  const canvasRef = useRef<{ clear: () => void; getBlob: () => Promise<Blob | null> }>(null);
   
   // Estados para las herramientas
   const [color, setColor] = useState("#000000");
@@ -54,7 +15,7 @@ export default function PracticePage() {
   return (
     <div className="practice-container">
       <header className="practice-header">
-        <button onClick={() => navigate("/menu")}>Volver</button>
+        <button onClick={() => navigate("/singleplayer")}>Volver al menú</button>
         <h2>Modo Práctica</h2>
         <button className="clear-btn" onClick={() => canvasRef.current?.clear()}>
           Limpiar Lienzo

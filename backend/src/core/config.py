@@ -13,3 +13,9 @@ URL_BD_SQLITE = "sqlite:///./pictionary.db"
 # Información de Redis
 URL_REDIS = "localhost"
 PORT_REDIS = 6379
+
+# Información del modelo de reconocimiento
+# GUESSING_MODEL_PATH = "/src/ai_models/pytorch_model.bin"
+# GUESSING_CLASSES_PATH = "/src/ai_models/classes.txt"
+GUESSING_MODEL_PATH = r"D:\finalTFG\backend\src\api\ai_models\guessing"
+

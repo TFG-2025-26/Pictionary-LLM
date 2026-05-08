@@ -5,7 +5,7 @@ import uuid
 from src.core.db_sqlite import get_sql_db
 from src.core.db_redis import redis_db
 from src.core.models import User, Stats
-from src.core.security import get_password_hash, verify_password, create_access_token
+from src.core.security import get_password_hash, verify_password, create_access_token, get_current_user
 from src.core.config import GUEST_TOKEN_EXPIRE_SECONDS
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, EmailStr
@@ -24,35 +24,19 @@ class UserLogin(BaseModel):
     username: str
     password: str
 
-# configuracion de ejemplo de una ruta
-# @router.get("/register")
-# async def register_get():
-#     """asd"""
-#     return {"mensaje": "de prueba"}
-
-# @router.post("/register")
-# async def register(data: dict):
-#     """asd"""
-#     # # LLAMADA A SQLITE para crear usuario permanente
-#     # # LLAMADA A argon2 para hashear password
-#     return {"message": "Usuario creado"}
 
 @router.post("/register")
 async def register(data: UserRegister, db: Session = Depends(get_sql_db)):
     """ Ruta que maneja el registro de un nuevo usuario """
 
-    # 1. Comprobar disponibilidad de nombre de usuario
     user_exists = db.query(User).filter(User.username == data.username).first()
     if user_exists:
-        # Este "detail" es el que aparecerá en el setError de React
         raise HTTPException(status_code=400, detail="Este nombre de usuario ya está en uso")
 
-    # 2. Comprobar disponibilidad de email
     email_exists = db.query(User).filter(User.email == data.email).first()
     if email_exists:
-        raise HTTPException(status_code=400, detail="Este correo electrónico ya tiene una cuenta")
+        raise HTTPException(status_code=400, detail="Este correo electrónico ya está en uso")
 
-    # 3. Crear usuario con Argon2
     try:
         new_user = User(
             username=data.username,
@@ -78,29 +62,18 @@ async def register(data: UserRegister, db: Session = Depends(get_sql_db)):
 async def login(data: UserLogin, db: Session = Depends(get_sql_db)):
     """ Ruta que maneja el login de los usuarios """
 
-    # 1. Buscar al usuario por nombre de usuario
     user = db.query(User).filter(User.username == data.username).first()
 
-    # 2. Si el usuario no existe, lanzamos error
-    # Nota: Por seguridad, se usa el mismo mensaje para "usuario no existe"
-    # y "pass incorrecta" para no dar pistas a atacantes.
     if not user:
-        raise HTTPException(status_code=401, detail="El nombre de usuario no existe")
+        raise HTTPException(status_code=401, detail="Las credenciales no son correctas")
 
-    # 3. Verificar si el usuario es un Guest
-    # if user.password_hash is None:
-    #      raise HTTPException(status_code=400, detail="Esta cuenta es de invitado")
-    # detail="Esta cuenta no tiene contraseña (acceso como invitado)
-
-    # 4. Comparar contraseñas con Argon2
     is_valid = verify_password(data.password, user.password_hash)
 
     if not is_valid:
-        raise HTTPException(status_code=401, detail="Contraseña incorrecta")
+        raise HTTPException(status_code=401, detail="Las credenciales no son correctas")
 
     access_token = create_access_token(data={"sub": user.username, "id": user.id})
 
-    # 5. Si todo está bien, devolvemos la información que el frontend espera
     return {
         "status": "success",
         "access_token": access_token, 
@@ -117,7 +90,6 @@ async def login(data: UserLogin, db: Session = Depends(get_sql_db)):
 async def login_guest():
     """ Ruta que maneja la creación de una cuenta guest temporal """
 
-    # 1. Generar identidad temporal
     guest_id = str(uuid.uuid4())[:4]
     guest_username = f"Guest_{guest_id}"
 
@@ -142,20 +114,24 @@ async def login_guest():
 
 
 @router.get("/auth")
-async def auth():
-    """ asd asd """
+async def auth(payload: dict = Depends(get_current_user)):
+    """ Ruta que maneja la reautenticación para  
+    comprobar que un token sigue siendo válido """
+    return {"user": payload}
 
 
 @router.get("/show")
 async def show_users(db: Session = Depends(get_sql_db)):
     """ ruta de prueba para comprobar que los usuarios se registran bien """
+
     users = db.query(User).all()
-    # Devolvemos una lista de diccionarios
+
     return [
         {
             "id": u.id,
             "username": u.username,
             "email": u.email,
+            "password_hash": u.password_hash,
             "created_at": u.created_at,
             "stats": {
                 "games": u.stats.total_games if u.stats else 0,

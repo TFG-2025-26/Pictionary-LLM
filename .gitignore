@@ -14,6 +14,8 @@ dist-ssr
 
 *.cpython-314.pyc
 
+model.safetensors
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
