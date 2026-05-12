@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.api import auth, multiplayer, ai_models
+from src.api import auth, ai_models #, multiplayer
 from src.core.db_sqlite import engine, Base
 # from src.core import models
 # from src.game_sockets import room_manager
@@ -26,9 +26,9 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     """ Función que ejecuta código al encendido y apagado del backend """
 
-    logger.info("El servidor del TFG se ha iniciado correctamente.")
+    logger.info("El backend se ha iniciado correctamente.")
     yield
-    logger.info("El servidor del TFG se está apagando")
+    logger.info("El backend se está apagando")
 
 app = FastAPI(lifespan=lifespan)
 
@@ -44,8 +44,8 @@ app.add_middleware(
 Base.metadata.create_all(bind=engine)
 
 app.include_router(auth.router, tags=["auth"])
-app.include_router(multiplayer.router, tags=["game_logic"])
 app.include_router(ai_models.router, tags=["ai_models"])
+# app.include_router(multiplayer.router, tags=["multiplayer"])
 
 # Montar Sockets...
 
@@ -54,7 +54,7 @@ app.include_router(ai_models.router, tags=["ai_models"])
 @app.get("/")
 async def root():
     """ Ruta de prueba para comprobar que el servidor está en funcionamiento """
-    return {"message": "Servidor del TFG funcionando"}
+    return {"message": "backend funcionando"}
 
 if __name__ == "__main__":
     # uvicorn.run("main:app", host="localhost", port=8000, reload=True)

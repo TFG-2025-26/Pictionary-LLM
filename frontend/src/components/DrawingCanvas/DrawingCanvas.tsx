@@ -149,9 +149,12 @@
 
 import { useRef, useState, useImperativeHandle, forwardRef } from "react";
 
+import * as ms from '@magenta/sketch';
+
 export interface DrawingCanvasRef {
   clear: () => void;
   getBlob: () => Promise<Blob | null>;
+  drawModel: (category: string) => Promise<void>;
 }
 
 interface Props {
@@ -159,13 +162,15 @@ interface Props {
   height?: number;
   color?: string;
   lineWidth?: number;
+  isEraser?: boolean;
 }
 
 const DrawingCanvas = forwardRef<DrawingCanvasRef, Props>((props, ref) => {
-  const { width = 800, height = 500, color = "#000000", lineWidth = 3 } = props;
+  const { width = 1000, height = 500, color = "#000000", isEraser = false , lineWidth = 3 } = props;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
+  
 
   useImperativeHandle(ref, () => ({
     clear: () => {
@@ -186,6 +191,68 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, Props>((props, ref) => {
           tempCanvas.toBlob((b) => resolve(b), "image/png");
         }
       });
+    },
+
+    drawModel: async (category: string) => {
+      const canvas = canvasRef.current;
+      const ctx = canvas?.getContext("2d");
+      if (!ctx || !ms) return;
+
+      ctx.clearRect(0, 0, width, height);
+
+      try {
+        // 1. Nueva URL según doc (fíjate en sketchRNN con mayúsculas y .json)
+        const model = new ms.SketchRNN(
+          `https://storage.googleapis.com/quickdraw-models/sketchRNN/models/${category}.gen.json`
+        );
+        
+        await model.initialize();
+        model.setPixelFactor(3.0); // Factor de escala según la doc
+
+        // 2. Inicializar estados (siguiendo el ejemplo de la doc)
+        let rnn_state = model.zeroState();
+        let [dx, dy, p0, p1, p2] = model.zeroInput();
+        let x = width / 2;
+        let y = height / 3;
+        let prev_pen = [1, 0, 0]; // p0, p1, p2
+        const temperature = 0.45; // Nivel de "creatividad"
+
+        while (prev_pen[2] !== 1) { // Mientras p2 (pen_end) no sea 1
+          // A) Actualizar estado de la neurona
+          rnn_state = model.update([dx, dy, p0, p1, p2], rnn_state);
+
+          // B) Obtener la distribución de probabilidad (pdf)
+          const pdf = model.getPDF(rnn_state, temperature);
+
+          // C) Muestrear el siguiente punto
+          [dx, dy, p0, p1, p2] = model.sample(pdf);
+
+          // D) Dibujar si el lápiz está apoyado (p0 anterior era 1)
+          if (prev_pen[0] === 1) {
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = lineWidth;
+            ctx.lineCap = "round";
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + dx, y + dy);
+            ctx.stroke();
+          }
+
+          // E) Actualizar coordenadas absolutas
+          x += dx;
+          y += dy;
+          prev_pen = [p0, p1, p2];
+
+          // Pequeña pausa para el efecto "animación"
+          await new Promise(r => setTimeout(r, 20));
+          
+          // Seguridad para evitar bucles infinitos en modelos corruptos
+          if (x < -500 || x > width + 500 || y < -500 || y > height + 500) break;
+        }
+        console.log("✅ IA ha terminado de dibujar.");
+      } catch (err) {
+        console.error("Error con SketchRNN:", err);
+      }
     }
   }));
 
@@ -201,7 +268,7 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, Props>((props, ref) => {
     const { x, y } = getPos(e);
     const ctx = canvasRef.current?.getContext("2d");
     if (ctx) {
-      ctx.lineWidth = lineWidth; ctx.lineCap = "round"; ctx.strokeStyle = color;
+      ctx.lineWidth = lineWidth; ctx.lineCap = "round"; ctx.strokeStyle = isEraser ? "#ffffff" : color;;
       ctx.beginPath(); ctx.moveTo(lastPos.x, lastPos.y); ctx.lineTo(x, y); ctx.stroke();
       setLastPos({ x, y });
     }

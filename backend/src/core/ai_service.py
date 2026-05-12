@@ -1,4 +1,5 @@
-"""asdasdasd"""
+""" ai_service.py - Fichero que almacena las clases definidas de los
+distintos modelos de la aplicación que interaccionan con el usuario """
 
 import io
 import os
@@ -7,7 +8,11 @@ from PIL import Image, ImageOps
 from transformers import SiglipImageProcessor, SiglipForImageClassification
 
 class AIGuesser:
+    """ Clase que define el modelo de adivinación, la inicialización
+    y su carga en memoria, y el método para comunicarse con él """
+
     def __init__(self, model_dir: str):
+
         self.model_dir = os.path.abspath(model_dir)
         self.device = torch.device("cpu")
 
@@ -17,6 +22,9 @@ class AIGuesser:
         self.model.eval()
 
     def guess(self, image_bytes: bytes):
+        """ Método llamado por la ruta del backend, que se encarga de transformar la
+        imagen recibida del lienzo, pasarla al modelo y devolver la respuesta al usuario """
+
         try:
             # Cargar imagen original (Lienzo blanco, trazo negro)
             img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
@@ -55,5 +63,5 @@ class AIGuesser:
             return f"Clase {predicted_class_idx}"
 
         except Exception as e: # pylint: disable=broad-exception-caught
-            print(f"Error en predicción: {e}")
+            print(f"Error en la predicción: {e}")
             return "Analizando..."

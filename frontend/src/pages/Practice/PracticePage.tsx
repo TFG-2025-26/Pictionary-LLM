@@ -1,19 +1,18 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import DrawingCanvas from "../../components/DrawingCanvas/DrawingCanvas";
+import DrawingCanvas, { type DrawingCanvasRef } from "../../components/DrawingCanvas/DrawingCanvas";
 import "./PracticePage.css";
 
 export default function PracticePage() {
   const navigate = useNavigate();
-  const canvasRef = useRef<{ clear: () => void; getBlob: () => Promise<Blob | null> }>(null);
+  const canvasRef = useRef<DrawingCanvasRef>(null);
   
-  // Estados para las herramientas
   const [color, setColor] = useState("#000000");
   const [size, setSize] = useState(5);
   const [isEraser, setIsEraser] = useState(false);
 
   return (
-    <div className="practice-container">
+    <div style={{ padding: "20px", textAlign: "center" }}>
       <header className="practice-header">
         <button onClick={() => navigate("/singleplayer")}>Volver al menú</button>
         <h2>Modo Práctica</h2>

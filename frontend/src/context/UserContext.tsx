@@ -57,12 +57,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
         }
         return r.json();
       })
-      // .then((data) => {
-      //   if (data && data.user) {
-      //     setSession(data.user);
-      //     localStorage.setItem("user_data", JSON.stringify(data.user));
-      //   }
-      // })
       .catch((err) => {
         if (err.message === "EXPIRED") { logout(); }
       })
@@ -90,17 +84,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
     
     const token = localStorage.getItem("token");
 
-    /*
-    const headers: HeadersInit = {
-      "Content-Type": "application/json",
-    };
-
-    if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
-    }
-    */
-
-    // mismo código que el comentado pero más limpio
     const headers: HeadersInit = {
     "Content-Type": "application/json",
     ...(token && { "Authorization": `Bearer ${token}` })};
@@ -121,7 +104,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   const register = async (username: string, email: string, pass: string) =>
-    //saveSession(await apiFetch("/register", { username, email, password: pass }));
     await apiFetch("/register", { username, email, password: pass });
 
   const login = async (username: string, pass: string) =>

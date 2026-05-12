@@ -55,7 +55,7 @@ async def register(data: UserRegister, db: Session = Depends(get_sql_db)):
     except Exception as e:
         db.rollback()
         print(f"Error en registro: {e}")
-        raise HTTPException(status_code=500, detail="Error crítico en la base de datos") # pylint: disable=raise-missing-from
+        raise HTTPException(status_code=500, detail="Error en la base de datos") # pylint: disable=raise-missing-from
 
 
 @router.post("/login")
@@ -93,13 +93,10 @@ async def login_guest():
     guest_id = str(uuid.uuid4())[:4]
     guest_username = f"Guest_{guest_id}"
 
-    # 2. Guardar en Redis (opcional: ponerle un tiempo de vida de 24h)
-    # Clave: "online_guest:Guest_1234", Valor: "active"
-    # redis_db.setex(f"online_guest:{guest_username}", GUEST_TOKEN_EXPIRE_SECONDS, "active")
+    redis_db.setex(f"guest:{guest_username}", GUEST_TOKEN_EXPIRE_SECONDS, "active")
 
-    # 3. Crear el JWT (añadimos 'is_guest' para diferenciarlo en el frontend)
     access_token = create_access_token(
-        data={"sub": guest_username, "id": guest_id, "is_guest": True}
+        data={"sub": guest_username, "id": guest_id, "is_guest": True}, is_guest=True
     )
 
     return {
@@ -120,7 +117,7 @@ async def auth(payload: dict = Depends(get_current_user)):
     return {"user": payload}
 
 
-@router.get("/show")
+@router.get("/show_created_users")
 async def show_users(db: Session = Depends(get_sql_db)):
     """ ruta de prueba para comprobar que los usuarios se registran bien """
 
@@ -139,3 +136,14 @@ async def show_users(db: Session = Depends(get_sql_db)):
             }
         } for u in users
     ]
+
+@router.get("/show_guest_users")
+async def show_guest_users():
+    """ ruta de prueba para comprobar que los usuarios guest se guardan bien """
+
+    keys = redis_db.keys("guest:*")
+    total_guests = len(keys)
+
+    usernames = [k.split(":")[1] for k in keys]
+
+    return total_guests, usernames
