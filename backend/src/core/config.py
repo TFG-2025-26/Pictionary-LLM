@@ -1,7 +1,7 @@
 """ Fichero que contiene las constantes que usará el resto de la aplicación """
 
 # Constantes de configuración de la sesión
-JWT_SECRET = "clave_secreta_del_tfg"
+JWT_SECRET = "2119dd9e4320bb54dce5d5bb45244850007ffafed143d13a4ea45440511729d6"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 360 # 6h
 
@@ -24,20 +24,20 @@ PENALTY_REDRAW = 5
 # (en el modo de juego /drawing en el que el usuario es el que dibuja)
 
 GUESSING_MODEL_LIST = ["aircraft_carrier","alarm_clock","ant","anvil","axe","banana","basket", \
-                       "bathtub","bear","bee","bird","bottlecap","bus","butterfly","cactus","cake", \
-                        "calculator","camel","camera","canle","cannon","canoe","carrot","castle", \
-                        "cat","ceiling_fan","cell_phone","cello","chair","chandelier","coffee_cup", \
-                        "compass","computer","cow","crab","crocodile","cruise_ship","dog","dolphin", \
-                        "dragon","drums","duck","dumbbell","elephant","eyeglasses","feather","fence", \
-                        "fish","flamingo","flower","foot","fork","frog","giraffe","grapes","guitar", \
-                        "hammer","helicopter","helmet","horse","kangaroo","lantern","laptop","leaf", \
-                        "lion","lipstick","lobster","microphone","monkey","mosquito","mouse","mug", \
-                        "mushroom","onion","panda","peanut","pear","peas","pencil","penguin","pig", \
-                        "pillow","pineapple","potato","power_outlet","purse","rabbit","raccoon", \
-                        "rhinoceros","rifle","saxophone","screwdriver","sea_turtle","see_saw","sheep", \
-                        "shoe","skateboard","snake","speedboat","spider","squirrel","strawberry", \
-                        "streetlight","submarine","swan","table","teapot","teddy_bear","television", \
-                        "tiger","train","truck","umbrella","vase","watermelon","whale","zebra"]
+                    "bathtub","bear","bee","bird","bottlecap","bus","butterfly","cactus","cake", \
+                    "calculator","camel","camera","canle","cannon","canoe","carrot","castle", \
+                    "cat","ceiling_fan","cell_phone","cello","chair","chandelier","coffee_cup", \
+                    "compass","computer","cow","crab","crocodile","cruise_ship","dog","dolphin", \
+                    "dragon","drums","duck","dumbbell","elephant","eyeglasses","feather","fence", \
+                    "fish","flamingo","flower","foot","fork","frog","giraffe","grapes","guitar", \
+                    "hammer","helicopter","helmet","horse","kangaroo","lantern","laptop","leaf", \
+                    "lion","lipstick","lobster","microphone","monkey","mosquito","mouse","mug", \
+                    "mushroom","onion","panda","peanut","pear","peas","pencil","penguin","pig", \
+                    "pillow","pineapple","potato","power_outlet","purse","rabbit","raccoon", \
+                    "rhinoceros","rifle","saxophone","screwdriver","sea_turtle","see_saw","sheep", \
+                    "shoe","skateboard","snake","speedboat","spider","squirrel","strawberry", \
+                    "streetlight","submarine","swan","table","teapot","teddy_bear","television", \
+                    "tiger","train","truck","umbrella","vase","watermelon","whale","zebra"]
 
 # Lista de categorías para el modelo de dibujo 
 # (en el modo de juego /guessing en el que el usuario es el que adivina)

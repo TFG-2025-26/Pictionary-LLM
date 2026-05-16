@@ -115,31 +115,31 @@ async def auth(payload: dict = Depends(get_current_user)):
     return {"user": payload}
 
 
-@router.get("/show_created_users")
-async def show_users(db: Session = Depends(get_sql_db)):
-    """ ruta de prueba para comprobar que los usuarios se registran bien """
+# @router.get("/show_created_users")
+# async def show_users(db: Session = Depends(get_sql_db)):
+#     """ ruta de prueba para comprobar que los usuarios se registran bien """
 
-    users = db.query(User).all()
+#     users = db.query(User).all()
 
-    return [
-        {
-            "id": u.id,
-            "username": u.username,
-            "email": u.email,
-            "password_hash": u.password_hash,
-            "created_at": u.created_at,
-            "total points": u.total_points,
-            "total games": u.total_games
-        } for u in users
-    ]
+#     return [
+#         {
+#             "id": u.id,
+#             "username": u.username,
+#             "email": u.email,
+#             "password_hash": u.password_hash,
+#             "created_at": u.created_at,
+#             "total points": u.total_points,
+#             "total games": u.total_games
+#         } for u in users
+#     ]
 
-@router.get("/show_guest_users")
-async def show_guest_users():
-    """ ruta de prueba para comprobar que los usuarios guest se guardan bien """
+# @router.get("/show_guest_users")
+# async def show_guest_users():
+#     """ ruta de prueba para comprobar que los usuarios guest se guardan bien """
 
-    keys = redis_db.keys("guest:*")
-    total_guests = len(keys)
+#     keys = redis_db.keys("guest:*")
+#     total_guests = len(keys)
 
-    usernames = [k.split(":")[1] for k in keys]
+#     usernames = [k.split(":")[1] for k in keys]
 
-    return total_guests, usernames
+#     return total_guests, usernames

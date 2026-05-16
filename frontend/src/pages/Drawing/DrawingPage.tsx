@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DrawingCanvas, { type DrawingCanvasRef } from "../../components/DrawingCanvas/DrawingCanvas";
-import { useModel } from "../../context/ModelContext";
 
 const getApiUrl = () => {
   // if (import.meta.env.PROD) {

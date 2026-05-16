@@ -37,7 +37,6 @@ export function ModelProvider({ children }: { children: ReactNode }) {
       const response = await fetch(`${API_BASE_URL}/guess`, {
         method: "POST",
         headers: {
-          // El navegador configura automáticamente el Content-Type para FormData
           ...(token && { "Authorization": `Bearer ${token}` }),
         },
         body: formData,
