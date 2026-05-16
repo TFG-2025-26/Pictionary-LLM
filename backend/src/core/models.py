@@ -1,16 +1,16 @@
 """ Fichero que contiene la estructura de las tablas de la BD persistente de SQLite """
 
-from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey #, Boolean
-from sqlalchemy.orm import relationship #, declarative_base
+from datetime import datetime, timezone
+from sqlalchemy import Column, Integer, String, DateTime
 from .db_sqlite import Base # pylint: disable=relative-beyond-top-level
 
 # pylint: disable=too-few-public-methods
 
 class User(Base):
-    """ Clase usuario, almacena los datos de los 
-    usuarios que se registren en la aplicación """
-
+    """ 
+    Clase usuario simplificada para el TFG. 
+    Almacena datos de perfil y estadísticas globales en la misma tabla.
+    """
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -18,34 +18,13 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     password_hash = Column(String, nullable=False)
     avatar_url = Column(String, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
-    stats = relationship("Stats", back_populates="user", uselist=False, cascade="all, delete-orphan") # pylint: disable=line-too-long
-    # matches_won = relationship("MatchHistory", back_populates="winner")
+    guessing_points = Column(Integer, default=0)
+    guessing_games = Column(Integer, default=0)
 
-class Stats(Base):
-    """ Estadísticas del jugador. Separado de la clase User 
-    para mantener la estructura limpia y clara """
+    drawing_points = Column(Integer, default=0)
+    drawing_games = Column(Integer, default=0)
 
-    __tablename__ = "stats"
-
-    user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    total_points = Column(Integer, default=0)
     total_games = Column(Integer, default=0)
-    total_wins = Column(Integer, default=0)
-    total_time_played = Column(Integer, default=0) # Almacenado en segundos
-    high_score = Column(Integer, default=0)
-
-    # Relación inversa
-    user = relationship("User", back_populates="stats")
-
-class MatchHistory(Base):
-    """ Historial de partidas finalizadas """
-
-    __tablename__ = "match_history"
-
-    id = Column(Integer, primary_key=True, index=True)
-    date = Column(DateTime, default=datetime.utcnow)
-    room_code = Column(String, index=True)
-    winner_id = Column(Integer, ForeignKey("users.id"))
-
-    # winner = relationship("User", back_populates="matches_won")

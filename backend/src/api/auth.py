@@ -4,7 +4,7 @@
 import uuid
 from src.core.db_sqlite import get_sql_db
 from src.core.db_redis import redis_db
-from src.core.models import User, Stats
+from src.core.models import User
 from src.core.security import get_password_hash, verify_password, create_access_token, get_current_user
 from src.core.config import GUEST_TOKEN_EXPIRE_SECONDS
 from fastapi import APIRouter, Depends, HTTPException
@@ -46,8 +46,6 @@ async def register(data: UserRegister, db: Session = Depends(get_sql_db)):
         db.add(new_user)
         db.flush()
 
-        # Crear stats iniciales
-        db.add(Stats(user_id=new_user.id))
         db.commit()
 
         return {"status": "success", "message": "Usuario creado correctamente"}
@@ -130,10 +128,8 @@ async def show_users(db: Session = Depends(get_sql_db)):
             "email": u.email,
             "password_hash": u.password_hash,
             "created_at": u.created_at,
-            "stats": {
-                "games": u.stats.total_games if u.stats else 0,
-                "wins": u.stats.total_wins if u.stats else 0
-            }
+            "total points": u.total_points,
+            "total games": u.total_games
         } for u in users
     ]
 

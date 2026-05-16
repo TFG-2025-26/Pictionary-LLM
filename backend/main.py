@@ -1,10 +1,12 @@
 """ main.py - El fichero principal que arranca el backend de la aplicación y
 hace las llamadas pertinentes a los diferentes componentes de la misma """
 
+import os
 import logging
 from contextlib import asynccontextmanager
 import uvicorn
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from src.api import auth, ai_models #, multiplayer
 from src.core.db_sqlite import engine, Base
@@ -32,6 +34,9 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+models_path = os.path.join(BASE_DIR, "jsons_guessing")
+
 app.add_middleware(
     CORSMiddleware,
     # allow_origins=["http://localhost:5173"],
@@ -46,6 +51,8 @@ Base.metadata.create_all(bind=engine)
 app.include_router(auth.router, tags=["auth"])
 app.include_router(ai_models.router, tags=["ai_models"])
 # app.include_router(multiplayer.router, tags=["multiplayer"])
+
+app.mount("/static_models", StaticFiles(directory=models_path), name="models")
 
 # Montar Sockets...
 

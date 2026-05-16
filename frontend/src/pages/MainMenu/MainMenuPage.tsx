@@ -13,11 +13,11 @@ export default function MainMenuPage() {
       
       <div className="menu-grid">
         <button className="single-player-btn" type="button" onClick={() => navigate("/singleplayer")}>
-          Practica
+          Un Jugador
         </button>
-        <button className="multiplayer-btn" type="button" onClick={() => navigate("/multiplayer")}>
+        {/* <button className="multiplayer-btn" type="button" onClick={() => navigate("/multiplayer")}>
           Multijugador
-        </button>
+        </button> */}
       </div>
 
       <button type="button" onClick={logout}>Logout</button>
