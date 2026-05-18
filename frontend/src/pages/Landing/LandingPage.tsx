@@ -23,7 +23,7 @@ export default function LandingPage() {
 
   return (
     <section className="landing-page">
-      <h1>Pictionary AI</h1>
+      <h1>PictoAI</h1>
       {/* {state?.message && <p className="success-message">{state.message}</p>}
       {state?.error && <p className="error-message">{state.error}</p>} */}
       <div className="landing-actions">
