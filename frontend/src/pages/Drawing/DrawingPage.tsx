@@ -135,7 +135,7 @@ export default function DrawingPage() {
         <div className="canvas-section">
           <DrawingCanvas ref={canvasRef} />
           <div className="ingame-buttons">
-            <button className="clear-btn" onClick={() => canvasRef.current?.clear()} disabled={gameState !== 'drawing'}>🧹 Limpiar lienzo</button>
+            <button className="clear-btn" onClick={() => canvasRef.current?.clear()} disabled={gameState !== 'drawing'}>Limpiar lienzo</button>
             {gameState === 'drawing' && (
               <button className="abandon-btn" onClick={handleAbandon}>Me rindo</button>
             )}

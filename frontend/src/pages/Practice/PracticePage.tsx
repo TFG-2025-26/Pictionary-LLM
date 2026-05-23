@@ -44,7 +44,7 @@ export default function PracticePage() {
           className={`tool-btn ${isEraser ? "active" : ""}`}
           onClick={() => setIsEraser(!isEraser)}
         >
-          {isEraser ? "🖌️ Usar Pincel" : "🧽 Borrador"}
+          {isEraser ? "Pincel" : "Borrador"}
         </button>
       </div>
 
