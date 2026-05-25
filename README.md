@@ -1,17 +1,29 @@
-# Pictionary TFG (nombre provisional)
+# PictoAI - Pictionary LLM
 
-# lo que llevo creado de momento del proyecto, lo he dividido en dos partes, el frontend y el backend. De momento he hecho "npm create vite@latest ." eligiendo React, y Typescript (no Typescript + React compiler, no es necesario). Estoy creando las primeras paginas de React del frontend, y también estoy creando la estructura del backend, ya que voy a separar ficheros en varios lugares, para no crear un fichero main.py enorme que sea dificil de leer y entender así, si quiero buscar por ejemplo algo relacionado con las bases de datos, me voy a la carpeta /bd y ya está, no tengo que andar scrolleando no sé cuanto hasta llegar a esa parte del código que contiene las 2 o 3 funciones pequeñas que simplemente conectan con la bd, o que cogen datos de una y lo mueven a la otra, así que así queda separado y más fácil de leer
+Este repositorio contiene el código fuente de la aplicación PictoAI, desarrollada como Trabajo de Fin de Grado bajo el título oficial de "Pictionary LLM". La aplicación es un juego de dibujo interactivo asistido por inteligencia artificial que consta de un servidor backend y un cliente web frontend.
 
-# el frontend y el backend de momento ya funcionan, vite cambia las paginas en :5173, y uvicorn en :8000 responde a las peticiones, he creado la de prueba de /register en GET y me responde el json de prueba, ahora mismo estoy con crear las conexiones a la base de datos, que cuando le de al boton de login con las credenciales, según entiendo vite o react mandan un json al backend, este lo coge, y yo voy a tener que programar el leer las variables, en el caso del login el username y la contra, y ya hago el proceso de mirar que existe, coger el hash guardado, calcular el que me han dado, comprobar que son iguales, si lo son le devuelvo el jwt con la sesion, si no le mando un error de que las credenciales no son correctas etc. etc. etc.
+Nota: El manual completo de instalación paso a paso, los requisitos de software del sistema y la guía de configuración detallada se encuentran especificados en el Apéndice A de la memoria del proyecto.
 
-# para arrancar todo esto es tan facil como arrancar dos terminales en la raiz, en una hacer "cd frontend" y luego "npm run dev", y en la otra "cd backend" y ".\venv\Scripts\python.exe .\main.py"
+## Estructura del proyecto
 
-# he hecho "pip install pydantic[email]"
+El código está organizado en dos directorios principales dentro de la raíz:
 
-# las rutas iniciales de register, login y login_guest ya funcionan, también el tema del token de jwt, ahora, si entras al frontend en la raiz, 1. lee si tienes token, 1a.si no hay o esta expirado (te lo borra) te deja en la landing page y ahi tienes que elegir si login, login como guest o registro, 2. cualquiera de estas rutas hace lo suyo y te devuelven a la landing, la landing revisa tu token de nuevo, y si has hecho login o login como guest, ahora que es valido, 3. te redireccionará automáticamente al main menu, que es una ruta solo para usuarios logueados (ESTOY TERMINANDO LO DE LOGIN GUEST PORQUE DA FALLO, TENGO QUE AJUSTAR LO DE LA CONEXION CON REDIS)
+* **/backend**: Servidor de la aplicación desarrollado en Python utilizando FastAPI. Gestiona la lógica lúdica, la autenticación y la carga local de los modelos de inteligencia artificial. El archivo de pesos comprimido (.safetensors) ya viene integrado en su ruta correspondiente dentro de este directorio.
+* **/frontend**: Interfaz de usuario adaptativa desarrollada en React con TypeScript, utilizando Vite como entorno de desarrollo y empaquetado.
 
-# ya está arreglado el problema que había, que cuando se pulsaba f5 no iba bien, porque quería comprobar que el token seguía siendo válido o no, y había problemas como que no lo leía bien porque el frontend mandaba en POST y el backend recibía en GET, que sobreescribía la sesión con una nueva que no tenía datos y se perdía, pero ya está, ahora es dar al f5, el frontend manda un POST a /auth, le pasa el token codificado, y el backend lo decodifica, y comprueba si está expirado, si lo está, devuelve un 401 como señal para que el frontend borre la sesión y mande al usuario al landing a que se identifique de nuevo
+## Resumen de comandos para ejecución rápido
 
-# ya funciona el modelo de adivinación, después de mucho buscar modelos de clasificación de imágenes, ya que había muchísmimos, pero prácticamente todos están entrenados en imágenes, no en dibujos, el único que he encontrado que es el que estoy usando ahora mismo, descargado desde el siguiente enlace, https://huggingface.co/prithivMLmods/Sketch-126-DomainNet, es un modelo de clasificación diseñado para clasificar sketches, pero más complejos, por lo que no termina de ser preciso para sketches tan simples como los realizados en el lienzo, pero aún así, sí que es capaz de adivinar ciertos dibujos que se realicen, siempre y cuando sean lo suficientemente claros, que no sean muy ambiguos, pero por lo demás funciona 
+Para levantar el entorno local de desarrollo de forma simultánea, ejecute los siguientes comandos en terminales independientes:
 
-# esta versión que subo ahora al repositorio, ya funcionan ambos modelos, el que dibuja para que yo adivine que acabo de meter, y el de la versión pasada que adivina lo que yo dibujo (más o menos), obviamente, como modelos de inteligencia artificial que son, no son lo mejor que hay, pero cumplen la tarea bastante bien (enlaces: https://magenta.tensorflow.org/sketch_rnn y https://magenta.github.io/magenta-js/sketch/)
+### Servidor (Backend)
+1. Acceder al directorio: `cd backend`
+2. Activar el entorno virtual de Python.
+3. Iniciar el servidor local: `uvicorn main:app --reload`
+
+El backend e hilos de comunicación se desplegarán en la dirección local http://localhost:8000.
+
+### Cliente (Frontend)
+1. Acceder al directorio: `cd frontend`
+2. Iniciar el entorno de desarrollo: `npm run dev`
+
+La interfaz web se desplegará en el puerto local asignado automáticamente (habitualmente http://localhost:5173).
