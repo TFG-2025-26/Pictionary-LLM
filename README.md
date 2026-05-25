@@ -8,12 +8,12 @@ Nota: El manual completo de instalación paso a paso, los requisitos de software
 
 El código está organizado en dos directorios principales dentro de la raíz:
 
-* **/backend**: Servidor de la aplicación desarrollado en Python utilizando FastAPI. Gestiona la lógica lúdica, la autenticación y la carga local de los modelos de inteligencia artificial. El archivo de pesos comprimido (.safetensors) ya viene integrado en su ruta correspondiente dentro de este directorio.
+* **/backend**: Servidor de la aplicación desarrollado en Python utilizando FastAPI. Gestiona la lógica lúdica, la autenticación y la carga local de los modelos de inteligencia artificial.
 * **/frontend**: Interfaz de usuario adaptativa desarrollada en React con TypeScript, utilizando Vite como entorno de desarrollo y empaquetado.
 
 ## Resumen de comandos para ejecución rápido
 
-Para levantar el entorno local de desarrollo de forma simultánea, ejecute los siguientes comandos en terminales independientes:
+Para levantar el entorno local de desarrollo de forma simultánea, ejecute los siguientes comandos en dos terminales independientes:
 
 ### Servidor (Backend)
 1. Acceder al directorio: `cd backend`
@@ -24,6 +24,6 @@ El backend e hilos de comunicación se desplegarán en la dirección local http:
 
 ### Cliente (Frontend)
 1. Acceder al directorio: `cd frontend`
-2. Iniciar el entorno de desarrollo: `npm run dev`
+2. Iniciar el entorno de desarrollo: `npm run dev -- --host`
 
 La interfaz web se desplegará en el puerto local asignado automáticamente (habitualmente http://localhost:5173).
